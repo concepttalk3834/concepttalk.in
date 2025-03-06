@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface PaymentService {
 	Payment createPayment(User user, PaymentDTO paymentDTO);
 	List<Payment> getPaymentsByUser(User user);
