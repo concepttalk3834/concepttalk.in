@@ -6,9 +6,11 @@ import com.concept.talk.entity.PaymentStatus;
 import com.concept.talk.entity.User;
 import com.concept.talk.repository.PaymentRepository;
 import com.concept.talk.service.PaymentService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class PaymentServiceImpl implements PaymentService {
 	
 	private final PaymentRepository paymentRepository;

@@ -12,10 +12,11 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long Id;
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false,unique = true)
@@ -26,8 +27,8 @@ public class User {
 	private String password;
 	@Column(nullable = false)
 	private String phoneNumber;
-	@Column(nullable = false)
-	private Long rank;
+	@Column(nullable = false,name = "user_rank")
+	private Long userrank;
 	@Column(nullable = false)
 	private Double percentile;
 	@Enumerated(EnumType.STRING)
@@ -35,6 +36,8 @@ public class User {
 	private Role role = Role.Student;
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private LocalDateTime createdAt = LocalDateTime.now();
+
 	@Column(name = "modified_at", nullable = false, updatable = false)
 	private LocalDateTime modifiedAt = LocalDateTime.now();
+
 }

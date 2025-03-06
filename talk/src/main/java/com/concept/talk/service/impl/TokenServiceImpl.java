@@ -4,10 +4,12 @@ import com.concept.talk.entity.Token;
 import com.concept.talk.entity.User;
 import com.concept.talk.repository.TokenRepository;
 import com.concept.talk.service.TokenService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class TokenServiceImpl implements TokenService {
 	private final TokenRepository tokenRepository;
 	

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
 public interface TokenService {
 	void saveToken(Token token);
 	void revokeAllUserTokens(User user);
