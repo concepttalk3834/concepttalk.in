@@ -1,33 +1,39 @@
 package com.concept.talk.controller;
 
-import com.concept.talk.dto.UserDTO;
 import com.concept.talk.entity.User;
+import com.concept.talk.repository.UserRepository;
 import com.concept.talk.service.UserService;
 import com.concept.talk.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+
 	private final UserServiceImpl userService;
 	
 	public AuthController(UserServiceImpl userService) {
 		this.userService = userService;
 	}
 	
-	
 	@PostMapping("/register")
-	public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO){
-		User user = userService.registerUser(userDTO);
-		return ResponseEntity.ok(user);
+	public String register(@RequestBody User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		userRepository.save(user);
+		return "User registered successfully";
 	}
-	
-	public ResponseEntity<User> loginUser(@RequestParam String email, @RequestParam String password){
-		Optional<User> userOptional = userService.authenticateUser(email, password);
-		return userOptional.map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.status(401).build());
+
+	@PostMapping("/login")
+	public String login() {
+		// Authentication is handled by Spring Security
+		return "User logged in successfully";
 	}
 }
