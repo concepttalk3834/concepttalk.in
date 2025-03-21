@@ -9,39 +9,25 @@ import java.time.LocalDateTime;
 @Table(name = "payments")
 public class Payment {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long paymentId;
-	
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long Order_id;
 	@Column(nullable = false)
-	private Double amount;
-	
+	private String amount;
 	@Column(nullable = true)
 	private String transactionId;
-	
 	@Column(name = "timestamp", nullable = false)
 	private LocalDateTime timestamp = LocalDateTime.now();
-	
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private PaymentStatus paymentStatus = PaymentStatus.Pending;
-	
+	private String paymentId;
+	private String status;
 	@ManyToOne
 	@JoinColumn(name = "user_id",nullable = false)
 	private User user;
 	
-	public Long getPaymentId() {
-		return paymentId;
-	}
-	
-	public void setPaymentId(Long paymentId) {
-		this.paymentId = paymentId;
-	}
-	
-	public Double getAmount() {
+	public String getAmount() {
 		return amount;
 	}
 	
-	public void setAmount(Double amount) {
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
 	
@@ -61,12 +47,24 @@ public class Payment {
 		this.timestamp = timestamp;
 	}
 	
-	public PaymentStatus getPaymentStatus() {
-		return paymentStatus;
+	public String getStatus() {
+		return status;
 	}
 	
-	public void setPaymentStatus(PaymentStatus paymentStatus) {
-		this.paymentStatus = paymentStatus;
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public Long getOrder_id() {
+		return Order_id;
+	}
+	
+	public void setOrder_id(Long order_id) {
+		Order_id = order_id;
+	}
+	
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
 	}
 	
 	public User getUser() {

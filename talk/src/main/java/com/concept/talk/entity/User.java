@@ -1,31 +1,49 @@
 package com.concept.talk.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
-	@Column(nullable = false)
+	
+	@NotBlank(message = "Name field is required")
+	@Size(min = 2,max = 20,message = "min 2 and max 20 is required")
 	private String name;
-	@Column(nullable = false,unique = true)
+	@Column(unique = true, nullable = false)
 	private String email;
-	@Column(nullable = true)
+	@JsonIgnore
 	private String password;
-	@Column(nullable = false,unique = true)
 	private String phoneNumber;
-	@Column(nullable = false,name = "user_rank")
 	private Long userrank;
-	@Column(nullable = false)
 	private Double percentile;
+	private String category;
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Role role = Role.Student;
+	private Role role;
+	private boolean emailVerified = false;
+	private boolean phoneVerified = false;
+	
+	@Getter(value = AccessLevel.NONE)
+	private boolean enabled = false;
+	private String emailToken;
+	private String resetToken;
+	private LocalDateTime tokenExpiryDate;
+	@Enumerated(value = EnumType.STRING)
+	private Providers provider = Providers.SELF;
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private LocalDateTime createdAt = LocalDateTime.now();
 	
@@ -45,6 +63,14 @@ public class User {
 		this.name = name;
 	}
 	
+	public String getCategory() {
+		return category;
+	}
+	
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	
 	public String getEmail() {
 		return email;
 	}
@@ -53,8 +79,74 @@ public class User {
 		this.email = email;
 	}
 	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
+	public Providers getProvider() {
+		return provider;
+	}
+	
+	public void setProvider(Providers provider) {
+		this.provider = provider;
+	}
+	
+	public boolean isEmailVerified() {
+		return emailVerified;
+	}
+	
+	public void setEmailVerified(boolean emailVerified) {
+		this.emailVerified = emailVerified;
+	}
+	
+	public boolean isPhoneVerified() {
+		return phoneVerified;
+	}
+	
+	public void setPhoneVerified(boolean phoneVerified) {
+		this.phoneVerified = phoneVerified;
+	}
+	
+	public String getEmailToken() {
+		return emailToken;
+	}
+	
+	public void setEmailToken(String emailToken) {
+		this.emailToken = emailToken;
+	}
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority(role.name()));
+	}
+	
 	public String getPassword() {
 		return password;
+	}
+	
+	@Override
+	public String getUsername() {
+		return email;
+	}
+	
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 	
 	public void setPassword(String password) {
@@ -99,5 +191,21 @@ public class User {
 	
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+	
+	public String getResetToken() {
+		return resetToken;
+	}
+	
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
+	}
+	
+	public LocalDateTime getTokenExpiryDate() {
+		return tokenExpiryDate;
+	}
+	
+	public void setTokenExpiryDate(LocalDateTime tokenExpiryDate) {
+		this.tokenExpiryDate = tokenExpiryDate;
 	}
 }
