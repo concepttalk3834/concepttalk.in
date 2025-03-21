@@ -4,14 +4,14 @@ import lombok.Data;
 
 
 public class PaymentDTO {
-	private Double amount;
+	private String amount;
 	private String transactionId;
 	
-	public Double getAmount() {
+	public String getAmount() {
 		return amount;
 	}
 	
-	public void setAmount(Double amount) {
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
 	

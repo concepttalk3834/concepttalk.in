@@ -1,17 +1,13 @@
 package com.concept.talk.dto;
 
-import com.concept.talk.entity.Role;
-import com.concept.talk.entity.User;
-import lombok.Data;
-
-public class UserDTO {
+public class SignUpRequest {
 	private String name;
 	private String email;
 	private String password;
 	private String phoneNumber;
 	private Long userRank;
 	private Double percentile;
-	
+	private String category;
 	
 	public Long getUserRank() {
 		return userRank;
@@ -59,5 +55,13 @@ public class UserDTO {
 	
 	public void setPercentile(Double percentile) {
 		this.percentile = percentile;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+	
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }
