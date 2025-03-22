@@ -20,7 +20,8 @@ import java.util.function.Function;
 
 @Service
 public class JWTServiceImpl implements JWTService {
-	private final String SECRET_KEY = "VkhvkeJZSJ4hG07k6EPz2l6LET7878jsjnW678asdsfergbrhtrrFEFEFG";
+	@Value("${SECRET_KEY}")
+	private String SECRET_KEY;
 	@Override
 	public String generateRefreshToken(Map<String, Object> extraClaims, UserDetails userDetails) {
 		extraClaims.put("role", userDetails.getAuthorities());
