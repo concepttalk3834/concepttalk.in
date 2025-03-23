@@ -47,8 +47,7 @@ public class SecurityConfig {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-//						.allowedOrigins("http://localhost:3000", "*")
-						.allowedOriginPatterns("*")
+						.allowedOrigins("http://localhost:3000")
 						.allowedMethods("GET", "POST", "PUT","DELETE")
 						.allowedHeaders("*")
 						.allowCredentials(true);
@@ -59,15 +58,16 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 				.authorizeHttpRequests(request -> request
 						.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
 						.requestMatchers("/api/auth/**").permitAll()
 						.requestMatchers("/api/payments/**").authenticated()
-						.requestMatchers("/user/**").authenticated()
+						.requestMatchers("/user/**").hasAnyAuthority("ADMIN","USER")
 						.anyRequest().permitAll()
 				)
 				.formLogin(Customizer.withDefaults())
-				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 		
@@ -79,17 +79,7 @@ public class SecurityConfig {
 		
 		return http.build();
 	}
-	
-//	@Bean
-//	public OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService() {
-//		DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
-//		return request -> {
-//			OAuth2User user = delegate.loadUser(request);
-//			// Custom logic to process the OAuth2 user
-//			return user;
-//		};
-//	}
-	
+
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
