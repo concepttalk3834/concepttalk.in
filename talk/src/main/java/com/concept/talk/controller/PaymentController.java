@@ -96,7 +96,7 @@ public class PaymentController {
         return ResponseEntity.ok(payment);
 	}
 	
-	@GetMapping("/user/{email}")
+	@GetMapping("/{email}")
 	public ResponseEntity<List<Payment>> getPaymentsByUser(@PathVariable String email){
 		Optional<User> userOptional = userService.findByEmail(email);
         if(userOptional.isEmpty()){

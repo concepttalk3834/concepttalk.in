@@ -3,6 +3,7 @@ package com.concept.talk.config;
 import com.concept.talk.entity.Role;
 import com.concept.talk.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,13 +42,16 @@ public class SecurityConfig {
 		this.userService = userService;
 	}
 	
+	@Value("${frontend_url}")
+	private String frontendUrl;
+	
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-						.allowedOrigins("http://localhost:3000")
+						.allowedOrigins(frontendUrl)
 						.allowedMethods("GET", "POST", "PUT","DELETE")
 						.allowedHeaders("*")
 						.allowCredentials(true);
