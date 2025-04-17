@@ -42,8 +42,8 @@ public class SecurityConfig {
 		this.userService = userService;
 	}
 	
-	@Value("${frontend_url}")
-	private String frontendUrl;
+	@Value("${FRONTEND_URL}")
+	private String FRONTEND_URL;
 	
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
@@ -51,17 +51,19 @@ public class SecurityConfig {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-						.allowedOrigins(frontendUrl)
-						.allowedMethods("GET", "POST", "PUT","DELETE")
+						.allowedOrigins(FRONTEND_URL) // http://localhost:5173
+						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 						.allowedHeaders("*")
 						.allowCredentials(true);
 			}
 		};
 	}
 	
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf(AbstractHttpConfigurer::disable)
+		http.cors(withDefaults())
+				.csrf(AbstractHttpConfigurer::disable)
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 				.authorizeHttpRequests(request -> request
 						.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
@@ -70,7 +72,6 @@ public class SecurityConfig {
 						.requestMatchers("/user/**").hasAnyAuthority("ADMIN","USER")
 						.anyRequest().permitAll()
 				)
-				.formLogin(Customizer.withDefaults())
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

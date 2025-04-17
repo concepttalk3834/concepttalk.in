@@ -55,7 +55,8 @@ public class PaymentController {
 		JSONObject ob = new JSONObject();
 		ob.put("amount",amount*100);
 		ob.put("currency","INR");
-		ob.put("receipt","txn_235425");
+		ob.put("receipt", "txn_" + System.currentTimeMillis());
+		ob.put("payment_capture", true);
 		Order order = razorpayClient.orders.create(ob);
 		System.out.println(order);
 		
@@ -72,6 +73,7 @@ public class PaymentController {
 	
 	@PostMapping("/update_payment")
 	public ResponseEntity<?> updatePayment(@RequestBody Map<String,Object> data,Principal principal){
+		System.out.println(data);
 		String paymentId = data.get("payment_id").toString();
         String status = data.get("status").toString();
 		

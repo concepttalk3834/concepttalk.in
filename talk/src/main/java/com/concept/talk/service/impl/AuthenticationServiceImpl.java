@@ -31,16 +31,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticationManager authenticationManager;
 	private final JWTService jwtService;
-	private final Helper helper;
+	@Autowired
+	private Helper helper;
 	@Autowired
 	private EmailService emailService;
 	
-	public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JWTService jwtService, Helper helper) {
+	public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JWTService jwtService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.authenticationManager = authenticationManager;
 		this.jwtService = jwtService;
-		this.helper = helper;
 	}
 	
 	@Override
@@ -82,6 +82,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		jwtAuthenticationResponse.setRefreshToken(refreshToken);
 		jwtAuthenticationResponse.setEmail(user.getEmail());
 		jwtAuthenticationResponse.setName(user.getName());
+		jwtAuthenticationResponse.setRole(user.getRole());
 		
 		return jwtAuthenticationResponse;
 	}
@@ -104,7 +105,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			jwtAuthenticationResponse.setRefreshToken(refreshTokenRequest.getToken());
 			jwtAuthenticationResponse.setEmail(user.getEmail());
 			jwtAuthenticationResponse.setName(user.getName());
-			
+			jwtAuthenticationResponse.setRole(user.getRole());
 			return jwtAuthenticationResponse;
 		}
 		return null;

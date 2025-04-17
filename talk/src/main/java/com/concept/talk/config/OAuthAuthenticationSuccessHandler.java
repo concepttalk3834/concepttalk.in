@@ -1,8 +1,11 @@
 package com.concept.talk.config;
 
 import com.concept.talk.entity.Providers;
+import com.concept.talk.entity.Role;
 import com.concept.talk.entity.User;
 import com.concept.talk.repository.UserRepository;
+import com.concept.talk.service.impl.JWTServiceImpl;
+import com.concept.talk.service.impl.UserServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +27,10 @@ public class OAuthAuthenticationSuccessHandler implements AuthenticationSuccessH
 	Logger log = LoggerFactory.getLogger(OAuthAuthenticationSuccessHandler.class);
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private JWTServiceImpl jwtService;
+	@Autowired
+	private UserServiceImpl userService;
 	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -38,24 +45,33 @@ public class OAuthAuthenticationSuccessHandler implements AuthenticationSuccessH
 		String email = oUser.getAttribute("email").toString();
 		String name = oUser.getAttribute("name").toString();
 		
-		User user = new User();
-		user.setEmail(email);
-		user.setName(name);
-		user.setProvider(Providers.GOOGLE);
-		user.setEnabled(true);
-		user.setEmailVerified(true);
-		user.setPercentile(20.00);
-		user.setPhoneNumber("123456789");
-		user.setUserrank(3654L);
-		user.setCategory("");
+		User user = userRepository.findByEmail(email).orElse(null);
 		
-		User user1 = userRepository.findByEmail(email).orElse(null);
-		
-		if(user1 == null){
+		if (user == null) {
+			user = new User();
+			user.setEmail(email);
+			user.setName(name);
+			user.setProvider(Providers.GOOGLE);
+			user.setEnabled(true);
+			user.setEmailVerified(true);
+			user.setPercentile(20.00);
+			user.setPhoneNumber("123456789");
+			user.setRole(Role.USER);
+			user.setUserrank(3654L);
+			user.setCategory("");
+			
 			userRepository.save(user);
-			log.info("User saved successfully" + email);
+			log.info("User saved successfully " + email);
 		}
 		
-		new DefaultRedirectStrategy().sendRedirect(request, response, "/user/profile");
+		// ✅ Load user details properly
+		UserDetails userDetails = userService.userDetailsService().loadUserByUsername(email);
+		
+		// ✅ Generate token using loaded user details
+		String token = jwtService.generateToken(userDetails);
+		
+		String redirectUrl = "http://localhost:5173/oauth-success?token=" + token;
+		
+		new DefaultRedirectStrategy().sendRedirect(request, response, redirectUrl);
 	}
 }
