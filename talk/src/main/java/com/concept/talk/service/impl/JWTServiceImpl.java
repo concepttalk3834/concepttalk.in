@@ -64,7 +64,7 @@ public class JWTServiceImpl implements JWTService {
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
-//		System.out.println(roles);
+		System.out.println(roles);
 		claims.put("roles", roles);
 		return generateToken(claims, userDetails);
 	}

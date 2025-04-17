@@ -7,6 +7,8 @@ public class DashBoardDTO {
 	private Long userRank;
 	private Double percentile;
 	private String category;
+	private boolean phoneVerified;
+	private boolean emailVerified;
 	
 	public String getName() {
 		return name;
@@ -54,5 +56,21 @@ public class DashBoardDTO {
 	
 	public void setCategory(String category) {
 		this.category = category;
+	}
+	
+	public boolean isPhoneVerified() {
+		return phoneVerified;
+	}
+	
+	public void setPhoneVerified(boolean phoneVerified) {
+		this.phoneVerified = phoneVerified;
+	}
+	
+	public boolean isEmailVerified() {
+		return emailVerified;
+	}
+	
+	public void setEmailVerified(boolean emailVerified) {
+		this.emailVerified = emailVerified;
 	}
 }

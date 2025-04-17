@@ -1,9 +1,6 @@
 package com.concept.talk.controller;
 
-import com.concept.talk.dto.JWTAuthenticationResponse;
-import com.concept.talk.dto.RefreshTokenRequest;
-import com.concept.talk.dto.SignInRequest;
-import com.concept.talk.dto.SignUpRequest;
+import com.concept.talk.dto.*;
 import com.concept.talk.entity.User;
 import com.concept.talk.repository.UserRepository;
 import com.concept.talk.service.impl.AuthenticationServiceImpl;
@@ -86,8 +83,8 @@ public class AuthController {
 	}
 	
 	@PostMapping("/reset-password")
-	public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
-		Optional<User> optionalUser = userRepository.findByResetToken(token);
+	public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+		Optional<User> optionalUser = userRepository.findByResetToken(request.getToken());
 		
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();
@@ -98,7 +95,7 @@ public class AuthController {
 			}
 			
 			// Update the user's password
-			user.setPassword(passwordEncoder.encode(newPassword));
+			user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 			user.setResetToken(null);
 			user.setTokenExpiryDate(null);
 			userRepository.save(user);

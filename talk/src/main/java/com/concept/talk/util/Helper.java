@@ -1,5 +1,6 @@
 package com.concept.talk.util;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -10,11 +11,12 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 
 @Service
+@RequiredArgsConstructor
 public class Helper {
-	@Value("${BASE_URL}")
-	private String BASE_URL;
+	@Value("${FRONTEND_URL}")
+	private String FRONTEND_URL;
 	
-	public static  String getEmailOfLoggedInUser(Authentication authentication){
+	public String getEmailOfLoggedInUser(Authentication authentication){
 		if(authentication instanceof OAuth2AuthenticatedPrincipal){
 			var aOAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
 			var clientId = aOAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
@@ -34,6 +36,10 @@ public class Helper {
 	}
 	
 	public String getLinkForEmailVerification(String emailToken){
-		return BASE_URL + "/auth/verify-email?token" + emailToken;
+		return FRONTEND_URL + "/auth/verify-email?token=" + emailToken;
+	}
+	
+	public void setFRONTEND_URL(String FRONTEND_URL) {
+		this.FRONTEND_URL = FRONTEND_URL;
 	}
 }

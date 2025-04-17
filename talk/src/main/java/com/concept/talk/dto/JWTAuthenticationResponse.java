@@ -1,10 +1,21 @@
 package com.concept.talk.dto;
 
+import com.concept.talk.entity.Role;
+
 public class JWTAuthenticationResponse {
 	private String token;
 	private String refreshToken;
 	private String name;
 	private String email;
+	private Role role;
+	
+	public Role getRole() {
+		return role;
+	}
+	
+	public void setRole(Role role) {
+		this.role = role;
+	}
 	
 	public String getToken() {
 		return token;

@@ -29,6 +29,7 @@ public class User implements UserDetails {
 	private String email;
 	@JsonIgnore
 	private String password;
+	@Column(unique = true)
 	private String phoneNumber;
 	private Long userrank;
 	private Double percentile;

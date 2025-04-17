@@ -18,12 +18,14 @@ import java.util.logging.Logger;
 public class DashBoardController {
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private Helper helper;
 	
 	private static final Logger LOGGER = Logger.getLogger(DashBoardController.class.getName());
 	
 	@GetMapping("/profile")
 	public ResponseEntity<?> dashboard(Authentication authentication){
-		String email = Helper.getEmailOfLoggedInUser(authentication);
+		String email = helper.getEmailOfLoggedInUser(authentication);
 		Optional<User> user = userRepository.findByEmail(email);
 		
 		if (!user.isPresent()) {
@@ -42,7 +44,7 @@ public class DashBoardController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please login first");
 		}
 		
-		String email = Helper.getEmailOfLoggedInUser(authentication);
+		String email = helper.getEmailOfLoggedInUser(authentication);
 		Optional<User> optionalUser = userRepository.findByEmail(email);
 		
 		if (!optionalUser.isPresent()) {
