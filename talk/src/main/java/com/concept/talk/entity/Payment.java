@@ -67,6 +67,10 @@ public class Payment {
 		this.paymentId = paymentId;
 	}
 	
+	public String getPaymentId() {
+		return paymentId;
+	}
+	
 	public User getUser() {
 		return user;
 	}

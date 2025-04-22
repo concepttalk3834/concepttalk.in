@@ -23,23 +23,25 @@ public class EmailService {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
 		
-		String resetPasswordLink = "http://localhost:5173/reset-password?token=" + resetToken;
+		String resetPasswordLink = "https://concept-talk-client.vercel.app/reset-password?token=" + resetToken;
 		
 		helper.setFrom("lalitjangir.cse29@gmail.com");
 		helper.setTo(email);
 		helper.setSubject("Reset your password");
 		
-		// Email content with reset link
+		// Email content with visible reset link
 		helper.setText("<p>Hello,</p>"
 				+ "<p>You have requested to reset your password.</p>"
 				+ "<p>Click the link below to reset your password:</p>"
-				+ "<p><a href=\"" + resetPasswordLink + "\">Reset Password</a></p>"
+				+ "<p><a href=\"" + resetPasswordLink + "\">" + resetPasswordLink + "</a></p>"
 				+ "<p>This link will expire in 1 hour.</p>"
+				+ "<p>In case you didn't get mail wait for 1-2 min. or check in spam.</p>"
 				+ "<p>If you didn't request this, please ignore this email.</p>", true);
 		
 		// Send the email
 		mailSender.send(message);
 	}
+	
 	
 	public void sendVerificationEmail(String to,String subject,String body){
 		SimpleMailMessage message = new SimpleMailMessage();

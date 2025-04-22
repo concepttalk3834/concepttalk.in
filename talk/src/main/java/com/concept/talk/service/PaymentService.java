@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface PaymentService {
 	List<Payment> getPaymentsByUser(User user);
+	List<Payment> getAllPayments();
 }
