@@ -19,4 +19,9 @@ public class PaymentServiceImpl implements PaymentService {
 	public List<Payment> getPaymentsByUser(User user) {
 		return paymentRepository.findByUser(user);
 	}
+	
+	@Override
+	public List<Payment> getAllPayments() {
+		return paymentRepository.findAll();
+	}
 }

@@ -74,22 +74,27 @@ public class PaymentController {
 	@PostMapping("/update_payment")
 	public ResponseEntity<?> updatePayment(@RequestBody Map<String,Object> data,Principal principal){
 		System.out.println(data);
+		
+		String order_id = data.get("order_id").toString();
 		String paymentId = data.get("payment_id").toString();
         String status = data.get("status").toString();
 		
 		User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new RuntimeException("User not found"));
         
-        Payment payment = paymentRepository.findByPaymentId(paymentId);
+        Payment payment = paymentRepository.findByPaymentId(order_id);
         payment.setStatus(status);
+		payment.setTransactionId(paymentId);
         paymentRepository.save(payment);
 		
 		try {
 			if ("success".equalsIgnoreCase(status)) {
 				emailService.sendPaymentInfo(user.getEmail(), payment, "Payment Successful", "Dear user,\n\nYour payment with ID " + paymentId +
-						" has been successfully processed.\n\nThank you.");
+						" has been successfully processed.\n\nThank you.\n\n In case you did not receive any mail please check spam or contact 7642010280");
 			} else if ("failure".equalsIgnoreCase(status)) {
 				emailService.sendPaymentInfo(user.getEmail(), payment, "Payment Failed", "Dear user,\n\nUnfortunately, your payment with ID " + paymentId +
-						" has failed. Please try again or contact support.\n\nThank you.");
+						" has failed. Please try again.\n\nThank you." +
+						"In case you are facing any issue, feel free to contact 7642010280");
+				
 			}
 		} catch (MessagingException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Payment updated but failed to send email.");

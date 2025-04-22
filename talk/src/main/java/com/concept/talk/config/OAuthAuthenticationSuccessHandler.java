@@ -70,8 +70,9 @@ public class OAuthAuthenticationSuccessHandler implements AuthenticationSuccessH
 		// ✅ Generate token using loaded user details
 		String token = jwtService.generateToken(userDetails);
 		
+//		String redirectUrl = "https://concept-talk-client.vercel.app/oauth-success?token=" + token;
 		String redirectUrl = "http://localhost:5173/oauth-success?token=" + token;
-		
+//		log.info("Redirecting to: {}", redirectUrl);
 		new DefaultRedirectStrategy().sendRedirect(request, response, redirectUrl);
 	}
 }

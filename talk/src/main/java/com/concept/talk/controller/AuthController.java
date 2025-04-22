@@ -91,7 +91,7 @@ public class AuthController {
 			
 			// Check if the token has expired
 			if (user.getTokenExpiryDate().isBefore(LocalDateTime.now())) {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Reset token has expired.");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Reset token has expired.Please try again ");
 			}
 			
 			// Update the user's password
